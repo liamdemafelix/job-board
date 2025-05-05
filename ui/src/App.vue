@@ -32,7 +32,7 @@ authStore.checkSession()
     <a-layout-content :style="{ padding: '0 50px', marginTop: '64px' }">
       <div :style="{ background: '#fff', padding: '24px 0', minHeight: '86vh' }">
         <a-row :gutter="[16, 16]">
-          <a-col :xs="0" :md="9" :lg="8" :xl="7" :xxl="4">
+          <a-col :xs="0" :md="9" :lg="8" :xl="7" :xxl="4" v-if="authStore.isAuthenticated">
             <template v-if="authStore.isAuthenticated">
               <div class="pl-4 pb-3">
                 <a-row>
@@ -85,7 +85,10 @@ authStore.checkSession()
               </a-menu>
             </template>
           </a-col>
-          <a-col :xs="24" :md="15" :lg="16" :xl="17" :xxl="20">
+          <a-col :xs="24" :md="15" :lg="16" :xl="17" :xxl="20" v-if="authStore.isAuthenticated">
+            <router-view />
+          </a-col>
+          <a-col :span="24" v-else>
             <router-view />
           </a-col>
         </a-row>
