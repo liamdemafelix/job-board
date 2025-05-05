@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouterView, RouterLink } from 'vue-router'
+import api from '@/api'
 import { CommentOutlined, FileAddOutlined, FolderOpenOutlined, StarOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { useUiStore } from '@/stores/ui'
 import SignInModal from '@/components/SignInModal.vue'
@@ -10,6 +11,15 @@ const authStore = useAuthStore()
 
 // Check if there is a valid session
 authStore.checkSession()
+
+// Get keywords
+api.get('/api/keywords').then((response) => {
+  if (response.status === 200) {
+    uiStore.keywords = response.data.data
+  } else {
+    console.error('Error fetching keywords:', response)
+  }
+})
 </script>
 
 <template>
@@ -34,7 +44,7 @@ authStore.checkSession()
     <a-layout-content :style="{ padding: '0 50px', marginTop: '64px' }">
       <div :style="{ background: '#fff', padding: '24px 0', minHeight: '86vh' }">
         <a-row :gutter="[16, 16]">
-          <a-col :xs="0" :md="9" :lg="8" :xl="7" :xxl="4" v-if="authStore.isAuthenticated">
+          <a-col :xs="{ span: 24, order: 2 }" :md="{ span: 9, order: 1 }" :lg="{ span: 8, order: 1 }" :xl="{ span: 7, order: 1 }" :xxl="{ span: 4, order: 1 }">
             <template v-if="authStore.isAuthenticated">
               <div class="pl-4 pb-3">
                 <a-row>
@@ -86,11 +96,19 @@ authStore.checkSession()
                 </a-menu-item>
               </a-menu>
             </template>
+            <a-divider v-if="authStore.isAuthenticated" />
+            <div class="filters pl-4">
+              <div class="pb-2"><strong>Filters</strong></div>
+              <a-checkbox-group v-model:value="uiStore.activeKeywords">
+                <a-row :gutter="[0, 4]">
+                  <a-col v-for="(keyword) in uiStore.keywords" :span="24" :key="keyword.id">
+                    <a-checkbox :value="keyword.name">{{ keyword.name }}</a-checkbox>
+                  </a-col>
+                </a-row>
+              </a-checkbox-group>
+            </div>
           </a-col>
-          <a-col :xs="24" :md="15" :lg="16" :xl="17" :xxl="20" v-if="authStore.isAuthenticated">
-            <router-view />
-          </a-col>
-          <a-col :span="24" v-else>
+          <a-col :xs="{ span: 24, order: 2 }" :md="{ span: 15, order: 1 }" :lg="{ span: 16, order: 1 }" :xl="{ span: 17, order: 1 }" :xxl="{ span: 20, order: 1 }">
             <router-view />
           </a-col>
         </a-row>

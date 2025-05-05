@@ -14,6 +14,8 @@ export const useUiStore = defineStore('ui', () => {
     const registerLoading = ref<boolean>(false)
     const registrationErrors = ref<string[]>([])
     const accountTypes = reactive(['Job Seeker', 'Employer'])
+    const keywords = ref<any>()
+    const activeKeywords = ref<string[]>([])
 
     // Undo this after deployment
     const signInForm = ref<{ email: string; password: string }>({
@@ -137,6 +139,8 @@ export const useUiStore = defineStore('ui', () => {
       showSignInModal,
       register,
       registrationErrors,
-      accountTypes
+      accountTypes,
+      keywords,
+      activeKeywords
     }
   })

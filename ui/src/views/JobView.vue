@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useUiStore } from '@/stores/ui'
 import dayjs from 'dayjs'
 import api from '@/api'
 import { useRoute } from 'vue-router'
@@ -9,6 +10,7 @@ const loading = ref<boolean>(true)
 const notFound = ref<boolean>(false)
 const job = ref<any>({})
 
+const uiStore = useUiStore()
 const route = useRoute()
 async function fetchJob() {
   loading.value = true
@@ -54,9 +56,11 @@ onMounted(() => {
         <div><calendar-outlined /> {{ dayjs(job.created_at).format('MMMM D, YYYY hh:mm A') }}</div>
         <div class="mt-2" v-if="job.keywords.length > 0">
           <template v-for="(keyword) in job.keywords">
-            <a-tag class="mt-2" color="blue">
-              {{ keyword.name }}
-            </a-tag>
+            <router-link :to="{ name: 'home', query: { tags: keyword.name } }" @click="uiStore.activeKeywords = [keyword.name]">
+              <a-tag class="mt-2" color="blue">
+                {{ keyword.name }}
+              </a-tag>
+            </router-link>
           </template>
         </div>
       </a-space>
