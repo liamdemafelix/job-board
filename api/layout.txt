@@ -1,0 +1,16 @@
+company
+office
+department
+category
+name (job title)
+descriptions[]
+    name
+    value
+employmentType
+seniority
+schedule
+yearsOfExperience
+keywords(csv)
+occupation
+occupationCategory
+createdAt
