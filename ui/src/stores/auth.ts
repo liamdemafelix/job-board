@@ -9,6 +9,7 @@ type User = {
   first_name: string;
   middle_name: string|null;
   last_name: string;
+  company: string|null;
   is_moderator: boolean;
 }
 

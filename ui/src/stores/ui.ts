@@ -6,6 +6,8 @@ import api from '@/api'
 
 export const useUiStore = defineStore('ui', () => {
     const selectedNavKeys = ref<string[]>([''])
+    const sidebarOpenKeys = ref<string[]>([''])
+    const sidebarSelectedKeys = ref<string[]>(['jobs'])
     const signInModalVisible = ref<boolean>(false)
     const registerModalVisible = ref<boolean>(false)
     const signInLoading = ref<boolean>(false)
@@ -120,6 +122,8 @@ export const useUiStore = defineStore('ui', () => {
 
     return {
       selectedNavKeys,
+      sidebarOpenKeys,
+      sidebarSelectedKeys,
       signInModalVisible,
       registerModalVisible,
       signInLoading,
