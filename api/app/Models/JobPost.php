@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 
 class JobPost extends Model
 {
+    use HasUlids;
+
     protected $fillable = [
         'user_id',
         'import_id',
@@ -18,6 +21,7 @@ class JobPost extends Model
         'years_of_experience',
         'occupation',
         'occupation_category',
+        'created_at' // needed to override model events
     ];
 
     public function user()
