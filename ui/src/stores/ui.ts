@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { notification } from 'ant-design-vue'
 import { useAuthStore } from '@/stores/auth'
@@ -11,6 +11,7 @@ export const useUiStore = defineStore('ui', () => {
     const signInLoading = ref<boolean>(false)
     const registerLoading = ref<boolean>(false)
     const registrationErrors = ref<string[]>([])
+    const accountTypes = reactive(['Job Seeker', 'Employer'])
 
     // Undo this after deployment
     const signInForm = ref<{ email: string; password: string }>({
@@ -23,17 +24,21 @@ export const useUiStore = defineStore('ui', () => {
         password: string;
         password_confirmation: string;
         first_name: string;
-        last_name: string;
         middle_name: string | null;
+        last_name: string;
+        company_name: string | null;
         username: string;
+        type: string;
     }>({
         email: '',
         password: '',
         password_confirmation: '',
         first_name: '',
-        last_name: '',
         middle_name: null,
-        username: ''
+        last_name: '',
+        company_name: null,
+        username: '',
+        type: 'Job Seeker'
     })
 
     function closeSignInModal() {
@@ -49,9 +54,11 @@ export const useUiStore = defineStore('ui', () => {
       registrationForm.value.password = ''
       registrationForm.value.password_confirmation = ''
       registrationForm.value.first_name = ''
-      registrationForm.value.last_name = ''
       registrationForm.value.middle_name = null
+      registrationForm.value.last_name = ''
+      registrationForm.value.company_name = null
       registrationForm.value.username = ''
+      registrationForm.value.type = 'Job Seeker' // seeker by default
       registerModalVisible.value = false
       registerLoading.value = false
     }
@@ -94,6 +101,7 @@ export const useUiStore = defineStore('ui', () => {
             message: 'Success',
             description: 'Registration successful.',
           })
+          registrationErrors.value = []
         }).catch((err) => {
           registrationErrors.value = []
           if (err.response.data.errors) {
@@ -124,6 +132,7 @@ export const useUiStore = defineStore('ui', () => {
       registrationForm,
       showSignInModal,
       register,
-      registrationErrors
+      registrationErrors,
+      accountTypes
     }
   })

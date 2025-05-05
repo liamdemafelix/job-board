@@ -31,12 +31,19 @@ watch(
           <div>We had some problems signing you up:</div>
           <ul class="mb-0">
             <li v-for="(error, index) in uiStore.registrationErrors" :key="index">
-              {{ error[0] }}
+              {{ error }}
             </li>
           </ul>
           <div class="mt-2">Please resolve these issues and try again.</div>
         </template>
       </a-alert>
+      <a-form-item name="type">
+        <a-segmented v-model:value="uiStore.registrationForm.type" block :options="uiStore.accountTypes" />
+      </a-form-item>
+      <a-form-item name="username" v-if="uiStore.registrationForm.type === 'Employer'">
+        <a-input v-model:value="uiStore.registrationForm.company_name" size="large" :disabled="uiStore.registerLoading"
+          placeholder="Your Company Name" />
+      </a-form-item>
       <a-form-item name="email" :rules="[{ required: true, message: 'Please enter your email address.' }]">
         <a-input ref="emailInputRef" v-model:value="uiStore.registrationForm.email" size="large"
           :disabled="uiStore.registerLoading" placeholder="Your Email Address" />
