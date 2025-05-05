@@ -19,6 +19,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->string('import_id')->nullable();
+            $table->string('subcompany')->nullable();
             $table->string('office');
             $table->string('department');
             $table->string('name');

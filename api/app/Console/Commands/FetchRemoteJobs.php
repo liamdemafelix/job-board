@@ -50,6 +50,7 @@ class FetchRemoteJobs extends Command
         // Parse into JobPost model structure
         $jobPostData = [
             'import_id' => trim((string) $position->id),
+            'subcompany' => trim((string) $position->subcompany),
             'office' => trim((string) $position->office),
             'department' => trim((string) $position->department),
             'name' => trim((string) $position->name),
