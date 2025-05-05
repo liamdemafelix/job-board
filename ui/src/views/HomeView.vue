@@ -45,6 +45,13 @@ onMounted(() => {
               <div><environment-outlined /> {{ job.office }}</div>
               <div><bank-outlined /> {{ job.user?.company ?? job.subcompany }}</div>
               <div><calendar-outlined /> {{ dayjs(job.created_at).format('MMMM D, YYYY hh:mm A') }}</div>
+              <div class="mt-2" v-if="job.keywords.length > 0">
+                <template v-for="(keyword) in job.keywords">
+                  <a-tag class="mt-2" color="blue">
+                    {{ keyword.name }}
+                  </a-tag>
+                </template>
+              </div>
             </a-space>
             <div v-if="job.job_post_descriptions.length > 0" class="mt-4">
               <a-divider />
@@ -58,7 +65,7 @@ onMounted(() => {
               <em>The employer has not provided a description for this job.</em>
             </div>
             <div class="mt-4 text-xs-right">
-              <a-button type="primary" @click="$router.push({ name: 'home', params: { id: job.id } })">
+              <a-button type="primary" @click="$router.push({ name: 'job', params: { id: job.id } })">
                 View More
               </a-button>
             </div>

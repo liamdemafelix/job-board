@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { RouterView, RouterLink } from 'vue-router'
 import { CommentOutlined, FileAddOutlined, FolderOpenOutlined, StarOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { useUiStore } from '@/stores/ui'
 import SignInModal from '@/components/SignInModal.vue'
@@ -16,7 +16,9 @@ authStore.checkSession()
   <a-layout>
     <a-layout-header theme="light" :style="{ position: 'fixed', zIndex: 1, width: '100%' }">
       <div class="logo">
-        <img src="/images/logo.svg" alt="Logo" class="logo-icon" />
+        <router-link :to="{ name: 'home' }">
+          <img src="/images/logo.svg" alt="Logo" class="logo-icon" />
+        </router-link>
       </div>
       <div class="auth-nav" v-if="!authStore.sessionLoading">
         <template v-if="authStore.isAuthenticated">
