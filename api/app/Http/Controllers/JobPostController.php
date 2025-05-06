@@ -23,7 +23,7 @@ class JobPostController extends Controller
             }
 
             // If user is not logged in, or is a seeker, only show public jobs
-            if (Auth::guest() || empty(Auth::user()->company)) {
+            if (Auth::guest() || !Auth::user()->is_moderator && !Auth::user()->company) {
                 $jobs->where('spam_level', 0);
             } elseif (Auth::user()->company) {
                 // The user is an employer. Show only jobs that are public, or jobs that they own even if they're not public.
@@ -49,6 +49,13 @@ class JobPostController extends Controller
     {
         try {
             $job = JobPost::with('user', 'jobPostDescriptions', 'keywords')->findOrFail($jobPost->id);
+            if (Auth::guest() || !Auth::user()->is_moderator && $jobPost->user_id != Auth::user()->id) {
+                if ($job->spam_level != 0) {
+                    return response()->json([
+                        'error' => 'This job post is not available.',
+                    ], 404);
+                }
+            }
             return response()->json([
                 'data' => $job
             ], 200);

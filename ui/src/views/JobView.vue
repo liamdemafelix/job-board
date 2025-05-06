@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 import { useUiStore } from '@/stores/ui'
 import dayjs from 'dayjs'
 import api from '@/api'
@@ -10,6 +11,7 @@ const loading = ref<boolean>(true)
 const notFound = ref<boolean>(false)
 const job = ref<any>({})
 
+const authStore = useAuthStore()
 const uiStore = useUiStore()
 const route = useRoute()
 async function fetchJob() {
@@ -64,7 +66,24 @@ onMounted(() => {
           </template>
         </div>
 
-        <a-alert v-if="job.spam_level == -1" type="warning" message="Under Review" description="This job post is under review. It will be published once approved by a moderator. Until then, this is only visible to you and moderators." show-icon class="mt-3 mb-0" />
+        <a-alert v-if="job.spam_level == -1" type="warning" show-icon class="mt-3 mb-0">
+          <template #message>
+            <div>Under Review</div>
+          </template>
+          <template #description>
+            <div v-if="!authStore.user?.is_moderator">This job post is under review. It will be published once approved by a moderator. Until then, this is only visible to you and moderators.</div>
+            <div v-else>This post is under review because the author has no existing published posts.</div>
+            <div v-if="authStore.user?.is_moderator" class="mt-2">
+              <div class="mb-2">
+                <strong>Moderator Actions</strong>
+              </div>
+              <a-space direction="horizontal" size="small">
+                <a-button danger>Mark as spam</a-button>
+                <a-button type="primary">Approve</a-button>
+              </a-space>
+            </div>
+          </template>
+        </a-alert>
       </a-space>
       <div v-if="job.job_post_descriptions.length > 0" class="mt-4">
         <a-divider />

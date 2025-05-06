@@ -9,7 +9,11 @@ body, .ant-layout, .ant-layout-footer {
 
 .ant-menu-dark .ant-menu-item-selected {
     background-color: rgba(255, 255, 255, 1) !important;
-    color: #000;
+    color: #000 !important;
+}
+
+.ant-menu-dark a {
+    color: #fff;
 }
 
 .ant-layout-footer {

@@ -44,7 +44,7 @@ export const useUiStore = defineStore('ui', () => {
         last_name: '',
         company_name: null,
         username: '',
-        type: 'Job Seeker'
+        type: 'Employer' // Employer by default
     })
 
     function closeSignInModal() {
@@ -64,7 +64,7 @@ export const useUiStore = defineStore('ui', () => {
       registrationForm.value.last_name = ''
       registrationForm.value.company_name = null
       registrationForm.value.username = ''
-      registrationForm.value.type = 'Job Seeker' // seeker by default
+      registrationForm.value.type = 'Employer' // Employer by default
       registerModalVisible.value = false
       registerLoading.value = false
     }

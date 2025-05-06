@@ -75,33 +75,26 @@ api.get('/api/keywords').then((response) => {
                 </div>
                 <a-menu v-model:openKeys="uiStore.sidebarOpenKeys" v-model:selectedKeys="uiStore.sidebarSelectedKeys"
                   mode="inline" theme="dark" :style="{ border: 0 }">
-                  <a-menu-item key="jobs" @click="uiStore.sidebarSelectedKeys = ['jobs']">
-                    <router-link to="/">
+                  <router-link to="/">
+                    <a-menu-item key="jobs" @click="uiStore.sidebarSelectedKeys = ['jobs']">
                       <comment-outlined />
                       <span>Job Listings</span>
-                    </router-link>
-                  </a-menu-item>
-                  <a-menu-item key="applications" @click="uiStore.sidebarSelectedKeys = ['applications']"
-                    v-if="authStore.user?.company == '' || authStore.user?.company == null">
-                    <router-link to="/">
-                      <star-outlined />
-                      <span>My Applications</span>
-                    </router-link>
-                  </a-menu-item>
-                  <a-menu-item key="my_jobs" @click="uiStore.sidebarSelectedKeys = ['my_jobs']"
-                    v-if="authStore.user?.company != '' && authStore.user?.company != null">
-                    <router-link to="/">
+                    </a-menu-item>
+                  </router-link>
+                  <router-link to="/">
+                    <a-menu-item key="my_jobs" @click="uiStore.sidebarSelectedKeys = ['my_jobs']"
+                      v-if="authStore.user?.company != '' && authStore.user?.company != null">
                       <folder-open-outlined />
                       <span>My Job Posts</span>
-                    </router-link>
-                  </a-menu-item>
-                  <a-menu-item key="new_job" @click="uiStore.sidebarSelectedKeys = ['new_job']"
-                    v-if="authStore.user?.company != '' && authStore.user?.company != null">
-                    <router-link :to="{ name: 'create-job' }">
-                      <file-add-outlined />
-                      <span>Post New Job</span>
-                    </router-link>
-                  </a-menu-item>
+                    </a-menu-item>
+                  </router-link>
+                  <router-link :to="{ name: 'create-job' }">
+                    <a-menu-item key="new_job"
+                      v-if="authStore.user?.company != '' && authStore.user?.company != null">
+                        <file-add-outlined />
+                        <span>Post New Job</span>
+                    </a-menu-item>
+                  </router-link>
                   <a-menu-item @click="logout">
                     <logout-outlined />
                     <span>Sign Out</span>
