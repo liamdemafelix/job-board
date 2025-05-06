@@ -19,10 +19,9 @@ export const useUiStore = defineStore('ui', () => {
     const keywords = ref<any>()
     const activeKeywords = ref<string[]>([])
 
-    // Undo this after deployment
     const signInForm = ref<{ email: string; password: string }>({
-        email: 'liamdemafelix',
-        password: 'P@ssw0rd'
+        email: '',
+        password: ''
     })
 
     const registrationForm = ref<{
@@ -49,8 +48,8 @@ export const useUiStore = defineStore('ui', () => {
 
     function closeSignInModal() {
       // Undo this after deployment
-      signInForm.value.email = 'liamdemafelix'
-      signInForm.value.password = 'P@ssw0rd'
+      signInForm.value.email = ''
+      signInForm.value.password = ''
       signInLoading.value = false
       signInModalVisible.value = false
     }
