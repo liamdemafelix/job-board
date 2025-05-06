@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\JobPendingReview;
 use App\Models\JobPost;
 use App\Models\Keyword;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class JobPostController extends Controller
@@ -120,6 +123,14 @@ class JobPostController extends Controller
                 ]);
             }
             DB::commit();
+
+            // Alert moderators
+            if ($validatedData['spam_level'] == -1) {
+                $mods = User::where('is_moderator', true)->get();
+                foreach ($mods as $mod) {
+                    Mail::to($mod->email)->queue(new JobPendingReview($jobPost));
+                }
+            }
 
             return response()->json([
                 'data' => $jobPost
