@@ -10,6 +10,7 @@ class JobPost extends Model
     use HasUlids;
 
     protected $fillable = [
+        'spam_level',
         'user_id',
         'import_id',
         'subcompany',

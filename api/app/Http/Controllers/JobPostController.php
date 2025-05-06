@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\JobPost;
 use App\Models\Keyword;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class JobPostController extends Controller
 {
@@ -56,6 +58,57 @@ class JobPostController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'An error occurred while fetching keywords.',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'department' => ['required', 'string', 'max:255'],
+                'descriptions' => ['required', 'array', 'min:1'],
+                'descriptions.*.title' => ['required', 'string', 'max:255'],
+                'descriptions.*.content' => ['required', 'string'],
+                'employment_type' => ['required', 'string', 'max:255'],
+                'keywords' => ['required', 'array', 'min:1'],
+                'keywords.*' => ['required', 'string', 'max:255'],
+                'name' => ['required', 'string', 'max:255'],
+                'occupation' => ['required', 'string', 'max:255'],
+                'occupation_category' => ['required', 'string', 'max:255'],
+                'office' => ['required', 'string', 'max:255'],
+                'schedule' => ['required', 'string', 'max:255'],
+                'seniority' => ['required', 'string', 'max:255'],
+                'years_of_experience' => ['required', 'integer', 'min:0'],
+            ]);
+            $validatedData['user_id'] = $request->user()->id;
+            $validatedData['spam_level'] = 0; // Publish
+            if (JobPost::where('user_id', $request->user()->id)->where('spam_level', 1)->count() == 0) {
+                $validatedData['spam_level'] = -1; // Flag
+            }
+
+            DB::beginTransaction();
+            $jobPost = JobPost::create($validatedData);
+            foreach ($validatedData['keywords'] as $keyword) {
+                $keywordModel = Keyword::firstOrCreate(['name' => $keyword]);
+                $jobPost->keywords()->attach($keywordModel->id, ['id' => strtolower((string) Str::ulid())]);
+            }
+            foreach ($validatedData['descriptions'] as $description) {
+                $jobPost->jobPostDescriptions()->create([
+                    'name' => $description['title'],
+                    'value' => nl2br($description['content'])
+                ]);
+            }
+            DB::commit();
+
+            return response()->json([
+                'data' => $jobPost
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'error' => 'An error occurred while creating the job post.',
                 'message' => $e->getMessage()
             ], 500);
         }

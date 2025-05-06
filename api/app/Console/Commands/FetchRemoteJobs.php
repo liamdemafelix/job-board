@@ -95,7 +95,7 @@ class FetchRemoteJobs extends Command
                 // Then attach each keyword individually
                 foreach ($keywordData as $keyword) {
                     $keywordModel = Keyword::firstOrCreate($keyword);
-                    $jobPost->keywords()->attach($keywordModel->id, ['id' => (string) \Illuminate\Support\Str::ulid()]);
+                    $jobPost->keywords()->attach($keywordModel->id, ['id' => strtolower((string) \Illuminate\Support\Str::ulid())]);
                 }
 
                 // Create job post descriptions

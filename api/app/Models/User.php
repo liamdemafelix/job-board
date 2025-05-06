@@ -54,4 +54,9 @@ class User extends Authenticatable
             'is_moderator' => 'boolean',
         ];
     }
+
+    public function jobPosts()
+    {
+        return $this->hasMany(JobPost::class);
+    }
 }
