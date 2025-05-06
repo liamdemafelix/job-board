@@ -131,7 +131,7 @@ function submitForm() {
           <a-col :xs="24" :lg="8">
             <a-form-item label="Years of Experience" name="years_of_experience"
               :rules="[{ required: true, message: 'Please enter years of experience.' }]">
-              <a-input placeholder="e.g. 5" v-model:value="jobForm.years_of_experience" :disabled="jobFormLoading" />
+              <a-input-number placeholder="0" min="0" style="width: 100%" v-model:value="jobForm.years_of_experience" :disabled="jobFormLoading" />
             </a-form-item>
           </a-col>
           <a-col :xs="24" :lg="8">
