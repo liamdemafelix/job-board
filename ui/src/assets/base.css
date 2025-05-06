@@ -7,6 +7,10 @@ body, .ant-layout, .ant-layout-footer {
     color: #fff !important;
 }
 
+p {
+    line-height: 24px;
+}
+
 .ant-menu-dark .ant-menu-item-selected {
     background-color: rgba(255, 255, 255, 1) !important;
     color: #000 !important;
