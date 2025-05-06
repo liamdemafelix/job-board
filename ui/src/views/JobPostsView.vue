@@ -1,37 +1,24 @@
 <script setup lang="ts">
-/**
- * Data Parsing and Display: Parse the data from the external source and display it in a user-friendly format on the job board. Each listing should at least include the job title,  description, and a link to the full job posting.
- */
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import { useUiStore } from '@/stores/ui'
-import { BankOutlined, CalendarOutlined, EnvironmentOutlined } from '@ant-design/icons-vue'
 import api from '@/api'
 import dayjs from 'dayjs'
+import { useUiStore } from '@/stores/ui'
+import { useAuthStore } from '@/stores/auth'
+import { BankOutlined, CalendarOutlined, EnvironmentOutlined } from '@ant-design/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
-const authStore = useAuthStore()
 const uiStore = useUiStore()
-const jobsResponse = ref<any>([])
-const jobs = ref<any>([])
+const authStore = useAuthStore()
+
 const loading = ref<boolean>(true)
 const page = ref<number>(1)
-const tags = ref<string>('')
-
-uiStore.$subscribe((mutation, state) => {
-  page.value = 1 // Reset page to 1 when keywords change
-  updateUrlParams()
-})
+const jobsResponse = ref<any>([])
+const jobs = ref<any[]>([])
 
 function updateUrlParams() {
   const query = { ...route.query }
-  if (uiStore.activeKeywords.length > 0) {
-    query.tags = uiStore.activeKeywords.join(',')
-  } else {
-    delete query.tags
-  }
 
   if (page.value > 1) {
     query.page = page.value.toString()
@@ -52,12 +39,11 @@ async function fetchJobs(pageNum?: number) {
     tags?: string
   } = {
     page: page.value,
-    tags: tags.value,
   }
-  let response = await api.get('/api/jobs', { params })
+  let response = await api.get('/api/jobs/posts', { params })
   if (response.status === 200) {
-    jobsResponse.value = response.data.data
-    jobs.value = jobsResponse.value.data
+    jobsResponse.value = response.data
+    jobs.value = jobsResponse.value.data.data
   } else {
     console.error('Error fetching jobs:', response)
   }
@@ -65,29 +51,25 @@ async function fetchJobs(pageNum?: number) {
 }
 
 // Check if there are query parameters
-tags.value = useRoute().query.tags as string
-if (tags.value) {
-  uiStore.activeKeywords = tags.value.split(',')
-}
 page.value = parseInt(useRoute().query.page as string) || 1
 
 // Fetch the jobs when the component is mounted. First page by default.
 fetchJobs()
 
-// Watch for changes in the query params
-watch(
-  () => route.query,
-  (newParams) => {
-    tags.value = newParams.tags as string
-    page.value = parseInt(newParams.page as string) || 1
-    fetchJobs()
-  },
-)
+onMounted(() => {
+  fetchJobs()
+})
 </script>
 <template>
   <main class="px-3">
     <a-typography>
-      <a-typography-title>Available Jobs</a-typography-title>
+      <a-typography-title>Jobs Posts</a-typography-title>
+      <a-typography-paragraph v-if="!authStore.user?.is_moderator">
+        You can find job posts you own here.
+      </a-typography-paragraph>
+      <a-typography-paragraph v-else>
+        You can find a list of all job posts in the board here.
+      </a-typography-paragraph>
     </a-typography>
     <a-divider />
     <div class="text-xs-center" v-if="loading">
@@ -102,9 +84,6 @@ watch(
               <a-tag color="yellow" v-if="job.spam_level == -1">Under Review</a-tag>
               <a-tag color="red" v-if="job.spam_level == 1">Marked as spam</a-tag>
               <a-tag color="green" v-if="job.spam_level == 0">Active</a-tag>
-              <a-tag v-if="job.import_id != '' && job.import_id != null">
-                External
-              </a-tag>
             </div>
             <a-space direction="vertical">
               <div><environment-outlined /> {{ job.office }}</div>

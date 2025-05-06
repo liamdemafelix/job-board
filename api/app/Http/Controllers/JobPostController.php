@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\JobPendingReview;
 use App\Models\JobPost;
 use App\Models\Keyword;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class JobPostController extends Controller
@@ -23,7 +26,7 @@ class JobPostController extends Controller
             }
 
             // If user is not logged in, or is a seeker, only show public jobs
-            if (Auth::guest() || empty(Auth::user()->company)) {
+            if (Auth::guest() || !Auth::user()->is_moderator && !Auth::user()->company) {
                 $jobs->where('spam_level', 0);
             } elseif (Auth::user()->company) {
                 // The user is an employer. Show only jobs that are public, or jobs that they own even if they're not public.
@@ -49,6 +52,13 @@ class JobPostController extends Controller
     {
         try {
             $job = JobPost::with('user', 'jobPostDescriptions', 'keywords')->findOrFail($jobPost->id);
+            if (Auth::guest() || !Auth::user()->is_moderator && $jobPost->user_id != Auth::user()->id) {
+                if ($job->spam_level != 0) {
+                    return response()->json([
+                        'error' => 'This job post is not available.',
+                    ], 404);
+                }
+            }
             return response()->json([
                 'data' => $job
             ], 200);
@@ -114,6 +124,14 @@ class JobPostController extends Controller
             }
             DB::commit();
 
+            // Alert moderators
+            if ($validatedData['spam_level'] == -1) {
+                $mods = User::where('is_moderator', true)->get();
+                foreach ($mods as $mod) {
+                    Mail::to($mod->email)->queue(new JobPendingReview($jobPost));
+                }
+            }
+
             return response()->json([
                 'data' => $jobPost
             ], 201);
@@ -121,6 +139,57 @@ class JobPostController extends Controller
             DB::rollBack();
             return response()->json([
                 'error' => 'An error occurred while creating the job post.',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function posts()
+    {
+        if (Auth::guest()) {
+            return response()->json([
+                'error' => 'You must be logged in to view your job posts.'
+            ], 403);
+        }
+        try {
+            $posts = JobPost::with('user', 'jobPostDescriptions', 'keywords')->orderBy('created_at', 'DESC');
+
+            if (!Auth::user()->is_moderator) {
+                // Show only my posts
+                $posts = $posts->where('user_id', Auth::user()->id);
+            }
+
+            $posts = $posts->paginate(5);
+
+            return response()->json([
+                'data' => $posts
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred while fetching your job posts.',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function moderate(JobPost $jobPost, Request $request)
+    {
+        if (Auth::guest() || !Auth::user()->is_moderator) {
+            return response()->json([
+                'error' => 'You must be logged in as a moderator to moderate job posts.'
+            ], 403);
+        }
+        try {
+            $validatedData = $request->validate([
+                'spam_level' => ['required', 'integer', 'in:-1,0,1'],
+            ]);
+            $jobPost->update($validatedData);
+            return response()->json([
+                'data' => $jobPost
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred while moderating the job post.',
                 'message' => $e->getMessage()
             ], 500);
         }
