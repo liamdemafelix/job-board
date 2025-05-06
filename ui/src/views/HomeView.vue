@@ -4,6 +4,7 @@
  */
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+
 import { useAuthStore } from '@/stores/auth'
 import { useUiStore } from '@/stores/ui'
 import { BankOutlined, CalendarOutlined, EnvironmentOutlined } from '@ant-design/icons-vue'
@@ -102,9 +103,6 @@ watch(
               <a-tag color="yellow" v-if="job.spam_level == -1">Under Review</a-tag>
               <a-tag color="red" v-if="job.spam_level == 1">Marked as spam</a-tag>
               <a-tag color="green" v-if="job.spam_level == 0">Active</a-tag>
-              <a-tag v-if="job.import_id != '' && job.import_id != null">
-                External
-              </a-tag>
             </div>
             <a-space direction="vertical">
               <div><environment-outlined /> {{ job.office }}</div>

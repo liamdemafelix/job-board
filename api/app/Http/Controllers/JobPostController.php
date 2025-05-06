@@ -106,7 +106,7 @@ class JobPostController extends Controller
             ]);
             $validatedData['user_id'] = $request->user()->id;
             $validatedData['spam_level'] = 0; // Publish
-            if (JobPost::where('user_id', $request->user()->id)->where('spam_level', 1)->count() == 0) {
+            if (JobPost::where('user_id', $request->user()->id)->where('spam_level', 0)->count() == 0) {
                 $validatedData['spam_level'] = -1; // Flag
             }
 
