@@ -1,10 +1,12 @@
 import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 import { notification } from 'ant-design-vue'
 import { useAuthStore } from '@/stores/auth'
 import api from '@/api'
 
 export const useUiStore = defineStore('ui', () => {
+  const router = useRouter()
     const selectedNavKeys = ref<string[]>([''])
     const sidebarOpenKeys = ref<string[]>([''])
     const sidebarSelectedKeys = ref<string[]>(['jobs'])
@@ -90,6 +92,8 @@ export const useUiStore = defineStore('ui', () => {
             description: 'You have entered an invalid email or password.',
           })
           signInLoading.value = false
+        }).finally(() => {
+            router.push('/?s=' + Math.random().toString(36).substring(2))
         })
       })
     }
@@ -118,6 +122,8 @@ export const useUiStore = defineStore('ui', () => {
             }
           }
           registerLoading.value = false
+        }).finally(() => {
+          router.push('/?s=' + Math.random().toString(36).substring(2))
         })
       })
     }

@@ -96,6 +96,9 @@ watch(
         <a-col :span="24" v-for="job in jobs">
           <a-card :key="job.id">
             <h1>{{ job.name }}</h1>
+            <div class="mb-2">
+              <a-tag color="yellow" v-if="job.spam_level == -1">Under Review</a-tag>
+            </div>
             <a-space direction="vertical">
               <div><environment-outlined /> {{ job.office }}</div>
               <div><bank-outlined /> {{ job.user?.company ?? job.subcompany }}</div>

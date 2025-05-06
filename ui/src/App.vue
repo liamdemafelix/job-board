@@ -97,7 +97,7 @@ api.get('/api/keywords').then((response) => {
                   </a-menu-item>
                   <a-menu-item key="new_job" @click="uiStore.sidebarSelectedKeys = ['new_job']"
                     v-if="authStore.user?.company != '' && authStore.user?.company != null">
-                    <router-link to="/">
+                    <router-link :to="{ name: 'create-job' }">
                       <file-add-outlined />
                       <span>Post New Job</span>
                     </router-link>

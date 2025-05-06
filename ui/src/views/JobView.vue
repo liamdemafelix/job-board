@@ -31,7 +31,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="text-xs-center" v-if="loading">
-    <a-spin :loading="loading" />
+    <a-spin size="large" :loading="loading" />
   </div>
   <div v-else-if="notFound">
     <a-empty>
@@ -50,7 +50,7 @@ onMounted(() => {
   <div v-else>
     <div class="px-5">
       <h1>{{ job.name }}</h1>
-      <a-space direction="vertical">
+      <a-space direction="vertical" style="width: 100%">
         <div><environment-outlined /> {{ job.office }}</div>
         <div><bank-outlined /> {{ job.user?.company ?? job.subcompany }}</div>
         <div><calendar-outlined /> {{ dayjs(job.created_at).format('MMMM D, YYYY hh:mm A') }}</div>
@@ -63,6 +63,8 @@ onMounted(() => {
             </router-link>
           </template>
         </div>
+
+        <a-alert v-if="job.spam_level == -1" type="warning" message="Under Review" description="This job post is under review. It will be published once approved by a moderator. Until then, this is only visible to you and moderators." show-icon class="mt-3 mb-0" />
       </a-space>
       <div v-if="job.job_post_descriptions.length > 0" class="mt-4">
         <a-divider />

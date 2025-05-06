@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 import api from '@/api'
 
@@ -14,6 +15,7 @@ type User = {
 }
 
 export const useAuthStore = defineStore('auth', () => {
+  const router = useRouter()
   const user = ref<User>({} as User)
   const sessionLoading = ref<boolean>(true)
   const logoutLoading = ref<boolean>(false)
@@ -46,6 +48,7 @@ export const useAuthStore = defineStore('auth', () => {
         isAuthenticated.value = false
       }).finally(() => {
         logoutLoading.value = false
+        window.location.href = '/' // Trigger reload
       })
     })
   }

@@ -83,3 +83,38 @@ label.ant-checkbox-wrapper {
     font-weight: normal;
     color: #fff;
 }
+
+.descriptions-section {
+    border: 1px solid #f0f0f0;
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .descriptions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .descriptions-header h3 {
+    margin: 0;
+  }
+
+  .description-item {
+    padding: 16px;
+    border-radius: 4px;
+  }
+
+  .description-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .description-header h4 {
+    margin: 0;
+  }

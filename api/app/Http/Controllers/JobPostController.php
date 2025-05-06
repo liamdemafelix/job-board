@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JobPost;
 use App\Models\Keyword;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -18,6 +19,17 @@ class JobPostController extends Controller
                 $tags = explode(',', $request->tags);
                 $jobs->whereHas('keywords', function ($query) use ($tags) {
                     $query->whereIn('name', $tags);
+                });
+            }
+
+            // If user is not logged in, or is a seeker, only show public jobs
+            if (Auth::guest() || empty(Auth::user()->company)) {
+                $jobs->where('spam_level', 0);
+            } elseif (Auth::user()->company) {
+                // The user is an employer. Show only jobs that are public, or jobs that they own even if they're not public.
+                $jobs->where('spam_level', 0)->orWhere(function ($query) {
+                    $query->where('user_id', Auth::user()->id)
+                        ->where('spam_level', '!=', 0);
                 });
             }
 
