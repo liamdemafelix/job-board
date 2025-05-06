@@ -1,5 +1,37 @@
+body, .ant-layout, .ant-layout-footer {
+    background: #4C5B61 !important;
+}
+
+.ant-menu-dark {
+    background: #303640 !important;
+    color: #fff !important;
+}
+
+.ant-menu-dark .ant-menu-item-selected {
+    background-color: rgba(255, 255, 255, 1) !important;
+    color: #000;
+}
+
+.ant-layout-footer {
+    color: #fff !important;
+}
+
 .ant-layout-header {
     border-bottom: 1px solid #e8e8e8 !important;
+}
+
+.ant-layout-content {
+    margin-top: 40px;
+}
+
+.round-l {
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+}
+
+.round-r {
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
 }
 
 div.logo {
@@ -13,6 +45,31 @@ div.logo {
     margin-right: 16px;
 }
 
+.side {
+    background: #303640;
+    padding-top: 32px;;
+    color: #fff;
+    padding-bottom: 32px;
+}
+
+.main-content {
+    background: #F6F8FC;
+    padding-top: 22px;
+    padding-bottom: 24px;
+}
+
+.sidebar-logo {
+    text-align: center;
+    margin-bottom: 24px;
+    padding: 0 14px;
+}
+
+.sidebar-logo-img {
+    max-height: 32px;
+    margin: 0 0 16px 0;
+    text-align: center;
+}
+
 div.logo img {
     height: 36px;
     width: auto;
@@ -24,9 +81,5 @@ label {
 
 label.ant-checkbox-wrapper {
     font-weight: normal;
-}
-
-.auth-nav {
-    text-align: right;
     color: #fff;
 }

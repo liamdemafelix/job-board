@@ -19,7 +19,7 @@ class JobPostController extends Controller
                 });
             }
 
-            $jobs = $jobs->paginate(1);
+            $jobs = $jobs->paginate(5);
             return response()->json([
                 'data' => $jobs
             ], 200);
