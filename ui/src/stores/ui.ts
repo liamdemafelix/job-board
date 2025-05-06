@@ -15,7 +15,7 @@ export const useUiStore = defineStore('ui', () => {
     const signInLoading = ref<boolean>(false)
     const registerLoading = ref<boolean>(false)
     const registrationErrors = ref<string[]>([])
-    const accountTypes = reactive(['Job Seeker', 'Employer'])
+    const accountTypes = reactive(['Employer', 'Moderator'])
     const keywords = ref<any>()
     const activeKeywords = ref<string[]>([])
 
@@ -64,7 +64,7 @@ export const useUiStore = defineStore('ui', () => {
       registrationForm.value.last_name = ''
       registrationForm.value.company_name = null
       registrationForm.value.username = ''
-      registrationForm.value.type = 'Employer' // Employer by default
+      registrationForm.value.type = 'Employer'
       registerModalVisible.value = false
       registerLoading.value = false
     }

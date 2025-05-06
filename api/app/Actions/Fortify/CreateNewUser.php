@@ -33,6 +33,7 @@ class CreateNewUser implements CreatesNewUsers
             ],
             'username' => ['required', 'string', 'max:255', Rule::unique(User::class)],
             'password' => $this->passwordRules(),
+            'type' => ['required', 'string', 'in:Employer,Moderator']
         ], [
             'company_name.required_if' => 'The company name is required when you are an employer.',
         ])->validate();
@@ -45,6 +46,7 @@ class CreateNewUser implements CreatesNewUsers
             'username' => $input['username'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
+            'is_moderator' => $input['type'] == 'Moderator',
         ]);
     }
 }

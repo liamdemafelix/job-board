@@ -37,9 +37,9 @@ watch(
           <div class="mt-2">Please resolve these issues and try again.</div>
         </template>
       </a-alert>
-      <!-- <a-form-item name="type">
+      <a-form-item name="type">
         <a-segmented v-model:value="uiStore.registrationForm.type" block :options="uiStore.accountTypes" />
-      </a-form-item> -->
+      </a-form-item>
       <a-form-item name="username" v-if="uiStore.registrationForm.type === 'Employer'">
         <a-input v-model:value="uiStore.registrationForm.company_name" size="large" :disabled="uiStore.registerLoading"
           placeholder="Your Company Name" />
