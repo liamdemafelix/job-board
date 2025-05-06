@@ -75,24 +75,24 @@ api.get('/api/keywords').then((response) => {
                 </div>
                 <a-menu v-model:openKeys="uiStore.sidebarOpenKeys" v-model:selectedKeys="uiStore.sidebarSelectedKeys"
                   mode="inline" theme="dark" :style="{ border: 0 }">
-                  <router-link to="/">
+                  <router-link :to="{ name: 'home' }">
                     <a-menu-item key="jobs" @click="uiStore.sidebarSelectedKeys = ['jobs']">
                       <comment-outlined />
                       <span>Job Listings</span>
                     </a-menu-item>
                   </router-link>
-                  <router-link to="/">
+                  <router-link :to="{ name: 'posts' }">
                     <a-menu-item key="my_jobs" @click="uiStore.sidebarSelectedKeys = ['my_jobs']"
-                      v-if="authStore.user?.company != '' && authStore.user?.company != null">
+                      v-if="authStore.user?.is_moderator || (authStore.user?.company != '' && authStore.user?.company != null)">
                       <folder-open-outlined />
-                      <span>My Job Posts</span>
+                      <span>Job Posts</span>
                     </a-menu-item>
                   </router-link>
                   <router-link :to="{ name: 'create-job' }">
                     <a-menu-item key="new_job"
                       v-if="authStore.user?.company != '' && authStore.user?.company != null">
                         <file-add-outlined />
-                        <span>Post New Job</span>
+                        <span>New Job</span>
                     </a-menu-item>
                   </router-link>
                   <a-menu-item @click="logout">

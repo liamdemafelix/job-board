@@ -7,7 +7,9 @@ Route::get('/keywords', [App\Http\Controllers\JobPostController::class, 'keyword
 Route::group(['prefix' => '/jobs'], function () {
     Route::get('/', [App\Http\Controllers\JobPostController::class, 'index']);
     Route::post('/', [App\Http\Controllers\JobPostController::class, 'store']);
+    Route::get('/posts', [App\Http\Controllers\JobPostController::class, 'posts']);
     Route::get('/{jobPost}', [App\Http\Controllers\JobPostController::class, 'show']);
+    Route::post('/{jobPost}/moderate', [App\Http\Controllers\JobPostController::class, 'moderate']);
 });
 
 Route::group(['middleware' => ['auth:sanctum']], function () {

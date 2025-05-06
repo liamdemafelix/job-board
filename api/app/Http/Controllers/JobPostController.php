@@ -132,4 +132,55 @@ class JobPostController extends Controller
             ], 500);
         }
     }
+
+    public function posts()
+    {
+        if (Auth::guest()) {
+            return response()->json([
+                'error' => 'You must be logged in to view your job posts.'
+            ], 403);
+        }
+        try {
+            $posts = JobPost::with('user', 'jobPostDescriptions', 'keywords')->orderBy('created_at', 'DESC');
+
+            if (!Auth::user()->is_moderator) {
+                // Show only my posts
+                $posts = $posts->where('user_id', Auth::user()->id);
+            }
+
+            $posts = $posts->paginate(5);
+
+            return response()->json([
+                'data' => $posts
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred while fetching your job posts.',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function moderate(JobPost $jobPost, Request $request)
+    {
+        if (Auth::guest() || !Auth::user()->is_moderator) {
+            return response()->json([
+                'error' => 'You must be logged in as a moderator to moderate job posts.'
+            ], 403);
+        }
+        try {
+            $validatedData = $request->validate([
+                'spam_level' => ['required', 'integer', 'in:-1,0,1'],
+            ]);
+            $jobPost->update($validatedData);
+            return response()->json([
+                'data' => $jobPost
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred while moderating the job post.',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
